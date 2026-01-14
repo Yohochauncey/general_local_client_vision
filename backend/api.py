@@ -1,22 +1,15 @@
-def login(system_uid: str, password: str):
-    pass
+def login(username: str) -> bool:
+    print(f"[LOGIN] {username}")
+    return True
 
 
-def send_screenshot(self, img_bytes):
-    """
-    发送截图
-    :param self:
-    :param img_bytes:
-    :return:
-    """
-    pass
-
-
-def poll_command(self, client_id):
-    """
-    获取指令
-    :param self:
-    :param client_id:
-    :return:
-    """
-    pass
+def fetch_action():
+    # 模拟后台模型返回
+    return {
+        "target_app": "WeChat",
+        "actions": [
+            {"type": "click", "rx": 0.15, "ry": 0.9},
+            {"type": "input", "text": "你好"},
+            {"type": "key", "key": "enter"}
+        ]
+    }

@@ -1,35 +1,24 @@
-from PyQt5 import QtWidgets, QtCore
-import sys
-import backend.api
+import tkinter as tk
+from backend.api import login
+from ui.ui_main import MainWindow
 
 
-class LoginWindow(QtWidgets.QWidget):
-    login_success = QtCore.pyqtSignal(dict)
-
+class LoginWindow:
     def __init__(self):
-        super().__init__()
-        self.setWindowTitle("登录")
-        self.setFixedSize(300, 180)
+        self.root = tk.Tk()
+        self.root.title("Automation Login")
+        self.root.geometry("300x150")
 
-        layout = QtWidgets.QVBoxLayout(self)
+        tk.Label(self.root, text="Username").pack(pady=5)
+        self.entry = tk.Entry(self.root)
+        self.entry.pack()
 
-        self.username = QtWidgets.QLineEdit()
-        self.username.setPlaceholderText("请输入用户名")
-        self.login_btn = QtWidgets.QPushButton("登录")
+        tk.Button(self.root, text="Login", command=self.on_login).pack(pady=20)
 
-        layout.addWidget(self.username)
-        layout.addWidget(self.login_btn)
+    def on_login(self):
+        if login(self.entry.get()):
+            self.root.destroy()
+            MainWindow().run()
 
-        self.login_btn.clicked.connect(self.handle_login)
-
-    def handle_login(self):
-        name = self.username.text().strip()
-        if not name:
-            return
-
-        user = self.api.login(name)
-        if user:
-            self.login_success.emit(user)
-            self.close()
-        else:
-            QtWidgets.QMessageBox.warning(self, "登录失败", "用户名无效")
+    def run(self):
+        self.root.mainloop()

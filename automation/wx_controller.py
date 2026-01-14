@@ -1,14 +1,22 @@
-from utils.mac_ax_helper import find_app_by_name, ax_click, ax_input
+import threading
+import time
+from backend.api import fetch_action
+from automation.action_interpreter import ActionInterpreter
 
 
 class WeChatController:
-    def execute(self, actions):
-        pid = find_app_by_name("WeChat")
-        if not pid:
-            return
+    def __init__(self, app_name):
+        self.interpreter = ActionInterpreter(app_name)
+        self.running = True
+        threading.Thread(target=self.loop, daemon=True).start()
 
-        for act in actions:
-            if act["type"] == "click":
-                ax_click(pid, act["x"], act["y"])
-            elif act["type"] == "input":
-                ax_input(act["text"])
+    def loop(self):
+        while self.running:
+            time.sleep(2)
+            task = fetch_action()
+            if task:
+                self.interpreter.execute(task["actions"])
+            time.sleep(2)
+
+    def stop(self):
+        self.running = False

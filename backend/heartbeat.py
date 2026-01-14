@@ -1,16 +1,11 @@
-import threading, time, requests
+import threading
+import time
 
 
-class Heartbeat(threading.Thread):
-    def __init__(self, client_id):
-        super().__init__()
-        self.client_id = client_id
-        self.daemon = True
-
-    def run(self):
+def start_heartbeat():
+    def loop():
         while True:
-            try:
-                requests.post("http://your-backend/api/heartbeat", json={"client_id": self.client_id})
-            except:
-                pass
-            time.sleep(10)
+            print("[HEARTBEAT]")
+            time.sleep(5)
+
+    threading.Thread(target=loop, daemon=True).start()
